@@ -22,13 +22,14 @@ server {
     server_name localhost;
 
     location /upload {
-        client_max_body_size 50M;  # Adjust the maximum upload size
+        client_max_body_size 100M;  # Adjust the maximum upload size
         root /var/www/html;
         index upload.html;
     }
 
 
     # TODO: This block might allow for php code execution from the uploads directory
+    # It does not exist right now, but it shouldn't be allowed
     location /upload-handler {
         client_max_body_size 50M;  # Adjust the maximum upload size
         root /var/www/uploads;
@@ -45,12 +46,13 @@ server {
         try_files $uri $uri/ =404;
 
         location ~ \.php$ {
-            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;  # Adjust this to your PHP-FPM socket or address
+            fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;  # Adjust this to your PHP-FPM socket or address
             fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME /var/www/html$fastcgi_script_name;
             include fastcgi_params;
         }
     }
+
 
     # TODO: We need to make sure this proxy header is being logged properly
     location /thankyou {
@@ -74,7 +76,7 @@ server {
     # Serve PHP file on /print
     # This is serving a PHP file that allows code to be uploaded to uploads directory, so I think this is required?
     location /print {
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;  # Adjust PHP version if needed
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;  # Adjust PHP version if needed
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME /var/www/html/print.php;  # Path to your PHP file
         include fastcgi_params;
