@@ -50,7 +50,7 @@ const authOptions: AuthOptions = {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
         token.expiresAt = account.expires_at;
-        // TODO: This seems wrong?
+        // TODO: This feels wrong, because why do they need their decoded access token, when they are already getting their access token in accessToken?
         token.decoded = jwtDecode(account.access_token!);
 
         return token;
