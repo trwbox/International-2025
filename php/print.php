@@ -15,21 +15,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_FILES["fileToUpload"])) {
         // TODO: I think this allows for path traversal with an input like "../../filename" potentially allowing overwriting itself
+        // The next block might prevent this, but I'm not sure
         $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 
+        $intended_target = realpath($target_file);
+        // Check for path traversal in the file name from here:
+        // https://stackoverflow.com/questions/4205141/preventing-directory-traversal-in-php-but-allowing-paths
+        if($intended_target === false || strcmp($intended_target, $target_dir) !== 0 ) {
+            $message = 'Error uploading file';
+            http_response_code(400);
+            exit();
+        }
+
+        // TODO: Check the file size of the uploaded file
         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-            $message = "The file " . basename($_FILES["fileToUpload"]["name"]) . " has been uploaded.";
+            $message = "The file " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " has been uploaded.";
             $link = "<a href='/uploads/" . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . "' class='view-link' target='_blank'>View it here</a>";
             $file_size = filesize($target_file);
+            // TODO: Storing these as part of the session feels weird?
             $_SESSION['file_uploaded'] = true;
-            $_SESSION['uploaded_file'] = basename($_FILES["fileToUpload"]["name"]);
+            // TODO: Check that this properly sanitizes the file name
+            $_SESSION['uploaded_file'] = htmlspecialchars(basename($_FILES["fileToUpload"]["name"]));
         } else {
             $message = "Sorry, there was an error uploading your file.";
+            $link = '';
         }
     } else {
         $message = "No file was uploaded.";
+        $link = '';
     }
 
+    // TODO: This seems wrong? Why is this here?
     if (isset($_POST['creationName'])) {
         $_SESSION['creationName'] = $_POST['creationName'];
     }
@@ -267,7 +283,7 @@ $uploadedFile = isset($_SESSION['uploaded_file']) ? $_SESSION['uploaded_file'] :
             const orderInfo = {
                 creationName: creationName.value,
                 fileSize: <?php echo $file_size; ?>,
-                fileName: '<?php echo addslashes($uploadedFile); ?>'
+                fileName: '<?php echo htmlspecialchars($uploadedFile); ?>'
             };
 
             fetch('/api/order-info', {
