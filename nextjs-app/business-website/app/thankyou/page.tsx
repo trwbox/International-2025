@@ -15,6 +15,7 @@ import { Suspense } from "react";
 export default function ThankYouPage() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("guid");
+  // TODO: If we are taking in the guid why are we taking in the price as well? We should pull it from the database.
   const amount = parseFloat(searchParams.get("price") as string) + 7.25;
   const name = searchParams.get("product_name");
 
@@ -109,6 +110,7 @@ export default function ThankYouPage() {
                 <p className="font-semibold">Order Details:</p>
                 <p>Order ID: {orderId}</p>
                 <p>Amount: ${amount}</p>
+                <p>TODO: This should be checked for XSS</p>
                 <p>Item name: {name}</p>
               </div>
               <p>We&apos;ll start processing your order right away!</p>

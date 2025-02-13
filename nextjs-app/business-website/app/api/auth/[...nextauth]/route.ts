@@ -20,6 +20,8 @@ function requestRefreshOfAccessToken(token: JWT) {
   });
 }
 
+// Pretty sure these options came from this blog post
+// https://medium.com/inspiredbrilliance/implementing-authentication-in-next-js-v13-application-with-keycloak-part-2-6f68406bb3b5
 const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
@@ -28,15 +30,19 @@ const authOptions: AuthOptions = {
       issuer: process.env.KEYCLOAK_ISSUER,
     }),
   ],
+
   cookies,
+
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
   },
+
   session: {
     strategy: "jwt",
     maxAge: 60 * 30,
   },
+
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
@@ -44,10 +50,12 @@ const authOptions: AuthOptions = {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
         token.expiresAt = account.expires_at;
+        // TODO: This seems wrong?
         token.decoded = jwtDecode(account.access_token!);
 
         return token;
       }
+
       //this is handling refreshing token
       if (Date.now() < (token.expiresAt as number) * 1000 - 60 * 1000) {
         return token;
@@ -75,12 +83,14 @@ const authOptions: AuthOptions = {
         }
       }
     },
+
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
       session.error = token.error as string;
       session.user = token.decoded as Record<string, unknown>;
       return session;
     },
+
   },
 };
 

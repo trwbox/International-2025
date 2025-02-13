@@ -22,20 +22,34 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const sqlQuery =
-      "INSERT INTO contact (email, inquiry_type, message) VALUES ('" +
-      email +
-      "', '" +
-      inquiryType +
-      "', '" +
-      message +
-      "')";
+    // TODO: Original is commented out. This is vulnerable to SQL injection. Use parameterized queries.
+    // const sqlQuery =
+    //   "INSERT INTO contact (email, inquiry_type, message) VALUES ('" +
+    //   email +
+    //   "', '" +
+    //   inquiryType +
+    //   "', '" +
+    //   message +
+    //   "')";
 
-    const [result] = await pool.query<ResultSetHeader>(sqlQuery);
+    // const [result] = await pool.query<ResultSetHeader>(sqlQuery);
 
-    const [rows] = await pool.query<RowDataPacket[]>(
-      "SELECT * FROM contact WHERE id = " + [result.insertId],
-    );
+
+    // TODO: This should fix this injection, but needs to be tested
+    // Create a prepared statement to prevent SQL injection
+    const sqlQuery = "INSERT INTO contact (email, inquiry_type, message) VALUES (?, ?, ?)";
+    
+    // Make the prepared statement
+    const [result] = await pool.query<ResultSetHeader>(sqlQuery, [email, inquiryType, message]);
+
+    // TODO: Original is commented out. This is vulnerable to SQL injection. Use parameterized queries.
+    // const [rows] = await pool.query<RowDataPacket[]>(
+    //   "SELECT * FROM contact WHERE id = " + [result.insertId],
+    // );
+
+    // TODO: This should fix this injection, but needs to be tested
+    const row_query = "SELECT * FROM contact WHERE id = ?";
+    const [rows] = await pool.query<RowDataPacket[]>(row_query, [result.insertId]);
 
     return NextResponse.json(
       {

@@ -22,6 +22,7 @@ interface Order {
 export interface OrderData {
   order: Order;
 }
+
 export default function PaymentPage() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
@@ -36,6 +37,7 @@ export default function PaymentPage() {
 
     const fetchOrderInfo = async () => {
       try {
+        // TODO: Why are we doing this here? Should this be client side.
         const response = await fetch(`/api/order-info?orderId=${orderId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch order information");
@@ -171,9 +173,11 @@ function LoadingState() {
     </div>
   );
 }
+
 interface ErrorStateProps {
   message: string;
 }
+
 function ErrorState({ message }: ErrorStateProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 flex items-center justify-center">

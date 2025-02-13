@@ -38,8 +38,10 @@ async function validateToken(token: string): Promise<string | null> {
     return null;
   }
 }
+
 export async function GET(req: Request) {
   try {
+    // TODO: This feels broken. Likely should be using some better middleware thing?
     const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return new Response(
@@ -60,6 +62,7 @@ export async function GET(req: Request) {
       );
     }
 
+    // TODO: I do not like how this is done.
     // Query to get the card info associated with the user
     const [rows] = await pool.query(
       `
@@ -76,6 +79,7 @@ export async function GET(req: Request) {
   `,
       [userId],
     );
+  
     const cardRows = rows as RowDataPacket[];
     return new Response(
       JSON.stringify({ cards: cardRows.length > 0 ? rows : [] }),

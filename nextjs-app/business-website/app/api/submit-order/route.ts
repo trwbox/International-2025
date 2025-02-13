@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
       .toISOString()
       .split("T")[0]; // YYYY-MM-DD
 
+    // TODO: Should we trust a user provided GUID here?
     const [updateResult] = await pool.query<ResultSetHeader>(
       "UPDATE orders SET paid = TRUE WHERE guid = ?",
       [orderId],
@@ -51,15 +52,18 @@ export async function POST(req: NextRequest) {
         "SELECT id FROM cards WHERE card_number = ? AND expiration_date = ? AND cvc = ?",
         [cardNumber, formattedExpiry, cvc],
       );
+
+      // TODO: This probably shouldn't be logged to the console.
       console.log("Existing card query result: ", existingCard);
 
       let cardId: number;
 
       if (existingCard.length > 0) {
         cardId = existingCard[0].id;
-        console.log("Existing card  was found");
+        console.log("Existing card was found");
       } else {
         console.log("Existing card not found, adding this new card...");
+        // TODO: This is vulnerable to SQL injection. Use parameterized queries.
         const [insertResult] = await pool.query<ResultSetHeader>(
           "INSERT INTO cards (card_number, expiration_date, cvc) VALUES ('" +
             cardNumber +

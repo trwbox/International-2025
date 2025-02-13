@@ -5,6 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// TODO: I don't know what this is, but seems weird.
 export const cookies = {
   sessionToken: {
     name: `next-auth.session-token.0`,

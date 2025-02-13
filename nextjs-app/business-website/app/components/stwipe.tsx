@@ -76,6 +76,7 @@ export function Stwipe() {
   useEffect(() => {
     const token = session?.accessToken;
     const fetchPaymentInfo = async () => {
+      // TODO: Why are we making this request here and not client side?
       try {
         const response = await fetch(`/api/payment-info`, {
           method: "GET",
@@ -101,10 +102,12 @@ export function Stwipe() {
 
     if (token) fetchPaymentInfo();
   }, [session, status]);
+
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
     if (value.length <= 16) setCardNumber(value);
   };
+
   const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
 
@@ -121,10 +124,12 @@ export function Stwipe() {
 
     setExpiry(value);
   };
+
   const handleCvcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
     if (value.length <= 3) setCvc(value);
   };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
@@ -145,6 +150,8 @@ export function Stwipe() {
       email: session?.user?.email || null,
       saveCard: paymentInfo?.cards[fallbackSelectedCard] ? false : saveCard,
     };
+
+    // TODO: Why are we making this request here and not client side?
     console.log("Submitting this data: ", JSON.stringify(submitData));
     try {
       const response = await fetch("/api/submit-order", {
@@ -161,6 +168,7 @@ export function Stwipe() {
 
       const result = await response.json();
 
+      // TODO: Why are we making this request here and not client side?
       const ftpResponse = await fetch("/api/ftp-upload", {
         method: "POST",
         headers: {
@@ -177,6 +185,7 @@ export function Stwipe() {
       console.log("Order submission result: ", result);
       console.log("FTP upload result: ", ftpResult);
 
+      // TODO: This feels like the wrong was to add the query params
       router.push(
         `/thankyou?${new URLSearchParams(orderDetails?.order as Record<string, string>).toString()}`,
       );
@@ -187,6 +196,7 @@ export function Stwipe() {
       setIsLoading(false);
     }
   };
+  
   const handleSignIn = async () => {
     signIn("keycloak");
   };

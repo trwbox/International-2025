@@ -18,6 +18,8 @@ async function validateToken(token: string): Promise<string | null> {
     return null;
   }
 }
+
+// TODO: This has broken authentication. It simply checks that there is a JWT token in the Authorization header.
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get("Authorization");

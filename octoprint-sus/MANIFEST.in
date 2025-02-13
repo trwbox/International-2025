@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_consolidate_temp_control/templates *
+recursive-include octoprint_consolidate_temp_control/translations *
+recursive-include octoprint_consolidate_temp_control/static *

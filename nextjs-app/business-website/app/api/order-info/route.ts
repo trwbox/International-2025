@@ -42,6 +42,7 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
 //Some function to generate a price based on file size, not too important
 const calculatePrice = (fileSize: number): number => {
   const fileSizeDigits = fileSize.toString().length;
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest) {
     const price = calculatePrice(fileSize);
 
     const guid = uuidv4();
+    // TODO: Check that this uuid is unique in the database
 
     console.log("In POST order-info");
     console.log("GUID/orderId: ", guid);

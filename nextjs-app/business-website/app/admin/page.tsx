@@ -4,6 +4,8 @@ import { useSession } from "next-auth/react";
 import { ServerFlagButton } from "../components/server-flag-button";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
+// TODO: I am 99% confident that this is broken authentication logic.
+// Do we need nextjs middleware?
 export default function AdminPage() {
   const { data: session } = useSession();
   const [isAdmin, setIsAdmin] = useState(true);
@@ -11,6 +13,8 @@ export default function AdminPage() {
   useEffect(() => {
     if (session?.accessToken) {
       try {
+        // TODO: This is not the right way to do this. We need to verify it too?
+        // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
         const decoded = jwt.decode(session.accessToken) as JwtPayload | null;
 
         if (decoded!.email.toLowerCase() == "admin@cyberprint.com") {
