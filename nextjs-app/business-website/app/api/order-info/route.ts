@@ -84,6 +84,8 @@ export async function POST(req: NextRequest) {
     console.log("filesize: ", fileSize);
     console.log("filename: ", fileName);
 
+    // TODO: Sanitize the filename somemore
+    // TODO: Check that the file is in the uploads directory, if not then return an error
     await pool.query(
       "INSERT INTO orders (guid, price, product_name, created_at, filesize, filename, paid) VALUES (?, ?, ?, NOW(), ?, ?, FALSE)",
       [guid, price, creationName, fileSize, fileName],

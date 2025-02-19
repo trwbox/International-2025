@@ -16,17 +16,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES["fileToUpload"])) {
         // TODO: I think this allows for path traversal with an input like "../../filename" potentially allowing overwriting itself
         // The next block might prevent this, but I'm not sure
+        // TODO: Why should we let the user specify the file name? Can it just be a uuid?
         $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 
         $intended_target = realpath($target_file);
         // Check for path traversal in the file name from here:
         // https://stackoverflow.com/questions/4205141/preventing-directory-traversal-in-php-but-allowing-paths
+
         if($intended_target === false || strcmp($intended_target, $target_dir) !== 0 ) {
             $message = 'Error uploading file';
             http_response_code(400);
             exit();
         }
 
+        // TODO: Add a check that the file is in the base of the uploads directory, and not a sub folder.
         // TODO: Check the file size of the uploaded file
         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
             $message = "The file " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " has been uploaded.";

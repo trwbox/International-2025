@@ -34,6 +34,8 @@ export async function POST(req: Request) {
       );
     }
 
+    // TODO: Grab the file name from the order in the database and not the user.
+    // TODO: Check that the filename from the database exists. If not throw an error
     console.log("Filename for FTP upload: ", fileName);
 
     const localDirectory = process.env.FTP_LOCAL_DIR;

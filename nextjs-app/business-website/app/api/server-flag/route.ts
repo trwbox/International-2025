@@ -2,6 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 async function validateToken(token: string): Promise<string | null> {
   try {
+    // TODO: This does not verify the token?
     const decoded = jwt.decode(token, { complete: true });
     if (!decoded || typeof decoded === "string") {
       throw new Error("Invalid token format");
