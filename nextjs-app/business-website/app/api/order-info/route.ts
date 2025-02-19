@@ -63,6 +63,7 @@ const calculatePrice = (fileSize: number): number => {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    console.log(body);
     const { creationName, fileSize, fileName } = body;
 
     if (!creationName || !fileSize || !fileName) {

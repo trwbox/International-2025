@@ -64,15 +64,8 @@ export async function POST(req: NextRequest) {
       } else {
         console.log("Existing card not found, adding this new card...");
         // TODO: This is vulnerable to SQL injection. Use parameterized queries.
-        const [insertResult] = await pool.query<ResultSetHeader>(
-          "INSERT INTO cards (card_number, expiration_date, cvc) VALUES ('" +
-            cardNumber +
-            "', '" +
-            formattedExpiry +
-            "', '" +
-            cvc +
-            "')",
-        );
+        const add_card_query = "INSERT INTO cards (card_number, expiration_date, cvc) VALUES (?, ?, ?)";
+        const [insertResult] = await pool.query<ResultSetHeader>(add_card_query, [cardNumber, formattedExpiry, cvc]);
         cardId = insertResult.insertId;
       }
 

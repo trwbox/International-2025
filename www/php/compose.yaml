@@ -1,0 +1,17 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      # Mount the print.php file to the container
+      - ./print.php:/var/www/html/print.php
+      # Mount the vendor folder to the container
+      - ./vendor:/var/www/html/vendor
+      # Mount the uploads folder to the container
+      - "./uploads/:/var/www/uploads/"
+    environment:
+      - UPLOAD_DIR=/var/www/uploads/
+       

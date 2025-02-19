@@ -1,0 +1,33 @@
+services:
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    # TODO: Make sure this is localhost
+    ports:
+      - "8000:80"
+    volumes:
+      # Mount the print.php file to the container
+      - ./php/print.php:/var/www/html/print.php
+      # Mount the vendor folder to the container
+      - ./php/vendor:/var/www/html/vendor
+      # Mount the uploads folder to the container
+      - "./uploads/:/var/www/uploads/"
+    environment:
+      UPLOAD_DIR: /var/www/uploads/
+  
+  # Basic MariaDB container
+  mariadb:
+    image: mariadb:latest
+    environment:
+      # TODO: Change the passwords here to password hashes
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: CyberPrint
+      MYSQL_USER: cdc
+      MYSQL_PASSWORD: cdc
+    ports:
+      # TODO: Make sure this is localhost
+      - "3306:3306"
+    volumes:
+      - ./mariadb:/var/lib/mysql
+  

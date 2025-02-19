@@ -1,5 +1,15 @@
 # README
 
+## Notes:
+
+rubyenv
+
+```bash
+sudo apt install libffi-dev libyaml-dev zlib1g-dev
+```
+
+## Original
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

@@ -6,11 +6,11 @@ import pool from "../../lib/pool";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { fileName, orderId } = body;
+    const { orderId } = body;
 
-    if (!fileName || !orderId) {
+    if ( !orderId ) {
       return NextResponse.json(
-        { message: "fileName and orderId is required in the request body" },
+        { message: "orderId is required in the request body" },
         { status: 400 },
       );
     }
@@ -34,6 +34,8 @@ export async function POST(req: Request) {
       );
     }
 
+    // Create the filename for the STL file
+    const fileName = `${orderId}.stl`;
     console.log("Filename for FTP upload: ", fileName);
 
     const localDirectory = process.env.FTP_LOCAL_DIR;
