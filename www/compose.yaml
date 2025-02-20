@@ -31,3 +31,17 @@ services:
     volumes:
       - ./mariadb:/var/lib/mysql
   
+  nginx:
+    # Use the modsecurity image to add WAF to the nginx container
+    image: owasp/modsecurity-crs:nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/templates/conf.d/default.conf.template
+      # - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./uploads/:/var/www/html/uploads/
+    depends_on:
+      - php
+    #  - keycloak
+    #  - ruby
+    #  - nextjs
