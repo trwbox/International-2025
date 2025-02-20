@@ -1,5 +1,6 @@
 import { JWT, getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+const secret = process.env.NEXTAUTH_SECRET
 //The reason for this file is because using the default nextauth "logout" function will clear nextauth session but not keycloak session
 function logoutParams(token: JWT): Record<string, string> {
   return {
@@ -26,7 +27,7 @@ function sendEndSessionEndpointToURL(token: JWT) {
 
 export async function GET(req: NextRequest) {
   try {
-    const token = await getToken({ req });
+    const token = await getToken({ req, secret });
     if (token) {
       return sendEndSessionEndpointToURL(token);
     }
