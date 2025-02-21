@@ -13,8 +13,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY composer.json /var/www/html/composer.json
 WORKDIR /var/www/html/
-RUN composer install \
-    && rm 
+RUN apt install git zip \
+    && composer install
 
 COPY apache2.conf /etc/apache2/apache2.conf
 COPY .htaccess /var/www/html/.htaccess
