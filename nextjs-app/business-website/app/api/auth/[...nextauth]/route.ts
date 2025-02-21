@@ -22,7 +22,7 @@ function requestRefreshOfAccessToken(token: JWT) {
 
 // Pretty sure these options came from this blog post
 // https://medium.com/inspiredbrilliance/implementing-authentication-in-next-js-v13-application-with-keycloak-part-2-6f68406bb3b5
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID,
