@@ -43,6 +43,8 @@ export async function POST(req: Request) {
 
     console.log("Local path of FTP file: ", `${localDirectory}/${fileName}`);
     console.log("Remote path of FTP file: ", `${remoteDirectory}/${fileName}`);
+
+    // TODO: We should probably do a basename on the file just to be safe.
     const localFilePath = `${localDirectory}/${fileName}`;
 
     const client = new Client();
