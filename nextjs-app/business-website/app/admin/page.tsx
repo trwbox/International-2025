@@ -8,7 +8,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 // Do we need nextjs middleware?
 export default function AdminPage() {
   const { data: session } = useSession();
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (session?.accessToken) {
@@ -31,20 +31,9 @@ export default function AdminPage() {
     }
   }, [session]);
 
-  if (!isAdmin) {
+  if (isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-5xl font-bold text-center mb-12 text-white tracking-tight">
-            Unauthorized Access
-          </h1>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CjxyZWN0IHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgZmlsbD0iIzBmMTcyYSI+PC9yZWN0Pgo8Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyMCIgc3Ryb2tlPSIjMWUzYThhIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiPjwvY2lyY2xlPgo8cGF0aCBkPSJNMzAgMTBMMTAgMzBMNDAgNTBMNjAgMzBMMzAgMTAiIHN0cm9rZT0iIzFkNGVkOCIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIj48L3BhdGg+Cjwvc3ZnPg==')] opacity-10"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-400/10 to-blue-300/10 mix-blend-overlay"></div>
@@ -67,5 +56,17 @@ export default function AdminPage() {
         <ServerFlagButton />
       </div>
     </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-5xl font-bold text-center mb-12 text-white tracking-tight">
+          Unauthorized Access
+        </h1>
+      </div>
+    </div>
+    
   );
 }
