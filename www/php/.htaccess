@@ -2,3 +2,7 @@ php_value upload_max_filesize 150M
 php_value post_max_size 165M
 php_value memory_limit 175M
 php_value max_execution_time 120
+
+RedirectMatch 404 /\..*$
+RedirectMatch 404 composer.json
+RedirectMatch 404 composer.lock
