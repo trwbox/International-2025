@@ -14,7 +14,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 COPY composer.json /var/www/html/composer.json
 WORKDIR /var/www/html/
 RUN apt update \
-    && apt install git zip \
+    && apt install git zip -y \
     && composer install
 
 COPY apache2.conf /etc/apache2/apache2.conf

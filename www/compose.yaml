@@ -10,7 +10,7 @@ services:
       # Mount the print.php file to the container
       - ./php/print.php:/var/www/html/print.php
       # Mount the vendor folder to the container
-      - ./php/vendor:/var/www/html/vendor
+      #- ./php/vendor:/var/www/html/vendor
       # Mount the uploads folder to the container
       - "./uploads/:/var/www/uploads/"
     environment:
