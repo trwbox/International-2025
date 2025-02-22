@@ -29,7 +29,7 @@ services:
       # TODO: Make sure this is localhost
       - "3306:3306"
     volumes:
-      - ./mariadb:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
   
   nginx:
     # Use the modsecurity image to add WAF to the nginx container
@@ -66,4 +66,14 @@ services:
       - ./keycloak/CyberPrint.json:/opt/keycloak/data/import/CyberPrint.json
     # TODO: This is a development environment, can we use production?
     # TODO: Remove the import realm after the realm is in the db
-    command: start-dev --import-realm
+    command: start-dev
+    
+  nodejs:
+    build: 
+      context: ./nextjs/business-website
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+
+volumes:
+  mariadb_data:
