@@ -44,7 +44,7 @@ services:
       - php
       - keycloak
     #  - ruby
-    #  - nextjs
+      - nodejs
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -67,6 +67,8 @@ services:
     # TODO: This is a development environment, can we use production?
     # TODO: Remove the import realm after the realm is in the db
     command: start-dev
+    depends_on:
+      - mariadb
     
   nodejs:
     build: 
@@ -74,6 +76,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:3000
+    depends_on:
+      - mariadb
+      - keycloak
 
 volumes:
   mariadb_data:

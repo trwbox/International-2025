@@ -1,11 +1,11 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import jwksClient from "jwks-rsa";
+// import jwksClient from "jwks-rsa";
 import { RowDataPacket } from "mysql2";
 import pool from "../../lib/pool";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 
-let client: jwksClient.JwksClient;
+// let client: jwksClient.JwksClient;
 
 //Gets the public key from the auth server to verify the JWT signature
 // async function getSigningKey(kid: string): Promise<string> {
@@ -41,7 +41,9 @@ let client: jwksClient.JwksClient;
 //   }
 // }
 
-export async function GET(req: Request, res: Response) {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+export async function GET(req: Request) {
   try {
     // TODO: This feels broken. Likely should be using some better middleware thing?
     // const authHeader = req.headers.get("Authorization");
@@ -99,8 +101,5 @@ export async function GET(req: Request, res: Response) {
       status: 500,
     });
   }
-}
-function useServerSession() {
-  throw new Error("Function not implemented.");
 }
 

@@ -105,7 +105,7 @@ function handle_upload() {
 
             // Make the request to the Next.js app to create the order and get the order ID
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'http://10.48.16.179:3000/api/order-info');
+            curl_setopt($ch, CURLOPT_URL, 'http://nodejs:3000/api/order-info');
             curl_setopt($ch, CURLOPT_POST, 1);
             
             $orderInfo = array(
