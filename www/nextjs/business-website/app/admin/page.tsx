@@ -17,7 +17,7 @@ export default function AdminPage() {
         // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
         const decoded = jwt.decode(session.accessToken) as JwtPayload | null;
 
-        console.log(decoded)
+        // console.log(decoded)
         console.log(decoded!.email.toLowerCase() == "admin@cyberprint.com")
 
         if (decoded!.email.toLowerCase() == "admin@cyberprint.com") {

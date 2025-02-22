@@ -71,8 +71,8 @@ function handle_upload() {
             if(strpos($intended_target_dir, $target_dir) !== 0) {
                 # Log the ip address of the user who tried to upload a file with a path traversal attack convert the strpos value to a string
                 error_log("Invalid target file: " . $target_file . " for: " . $target_dir);
-                // TODO: Don't var_dump here
-                var_dump($strpos_value);
+                // TODO: Don't // var_dump here
+                // var_dump($strpos_value);
                 $message = 'Error uploading file';
                 // http_response_code(423);
                 return;
@@ -114,8 +114,8 @@ function handle_upload() {
                 'fileName' => basename($_FILES["fileToUpload"]["name"]),
             );
 
-            // TODO: Don't var_dump here
-            var_dump(json_encode($orderInfo));
+            // TODO: Don't // var_dump here
+            // var_dump(json_encode($orderInfo));
             // Set the request body to the order info
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($orderInfo));
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
@@ -130,8 +130,8 @@ function handle_upload() {
                 return;
             }
 
-            // TODO: Don't var_dump here
-            var_dump($response);
+            // TODO: Don't // var_dump here
+            // var_dump($response);
             // Get the order ID from the ['order']['guid'] key in the response if it exists
             $order_id = $response['order']['guid'] ?? null;
             if ($order_id === null) {

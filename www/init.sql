@@ -43,7 +43,7 @@ CREATE TABLE user_cards (
 
 -- Create the privileges for the nextjs user
 -- TODO: Change this to be a password hash
-CREATE USER IF NOT EXISTS 'nextjs'@'%' IDENTIFIED BY 'password';
+CREATE USER IF NOT EXISTS 'nextjs'@'%' IDENTIFIED BY PASSWORD '*5A8B7D04B18F4666888DE3F5B3668A0D69F4EE4A';
 GRANT SELECT, INSERT ON CyberPrint.cards TO 'nextjs'@'%';
 GRANT SELECT, INSERT ON CyberPrint.contact TO 'nextjs'@'%';
 GRANT SELECT, INSERT, UPDATE ON CyberPrint.orders TO 'nextjs'@'%';
@@ -55,14 +55,17 @@ USE keycloak;
 
 -- Create the keycloak user
 -- TODO: Change this to be a password hash
-CREATE USER IF NOT EXISTS 'keycloak'@'%' IDENTIFIED BY 'password';
+CREATE USER IF NOT EXISTS 'keycloak'@'%' IDENTIFIED BY PASSWORD "*B713DCC3FE2F0BB677904CFFADD5B0B9A3E68E00";
 GRANT ALL PRIVILEGES ON keycloak.* TO 'keycloak'@'%';
 
 -- Update the root password
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
+ALTER USER 'root'@'localhost' IDENTIFIED BY PASSWORD '*DE792215F1F378225F0B692E77A6BC499D8E1904';
+
+ALTER USER 'cdc'@'localhost' IDENTIFIED BY PASSWORD '*E0BB9EAF2B45A06E15B1B8EF4986F051CB0FDFCF';
 
 -- Delete the root password for remote access
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost');
+DELETE FROM mysql.user WHERE User='cdc' AND Host NOT IN ('localhost');
 
 -- Flush the privileges
 FLUSH PRIVILEGES;

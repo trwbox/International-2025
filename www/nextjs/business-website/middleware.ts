@@ -21,7 +21,7 @@ function getKeys() {
 
 export default withAuth(
   async function middleware(req: NextRequest) {
-    console.log(req.nextUrl.pathname)
+    // console.log(req.nextUrl.pathname)
     // @ts-expect-error nextauth not recognized as an element of NextRequest
     const token = req.nextauth.token.accessToken; // Extract token after 'Bearer '
 
@@ -46,7 +46,7 @@ export default withAuth(
       });
 
       if (req.nextUrl.pathname.startsWith("/api/payment-info") ) {
-        console.log("Request to payment-info")
+        // console.log("Request to payment-info")
       } else {
         if (payload.email !== "admin@cyberprint.com") {
           throw new Error("Invalid token format");
@@ -74,7 +74,7 @@ export default withAuth(
         try {
           if (!token || typeof token !== "string") { throw new Error("No token")}
           const decodedToken = jwt.decode(token, { complete: true });
-          console.log(decodedToken?.payload)
+          // console.log(decodedToken?.payload)
           if (!decodedToken || typeof decodedToken === "string") {
             throw new Error("Invalid token format");
           }
