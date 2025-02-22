@@ -1,0 +1,62 @@
+{
+    "packages": [
+        {
+            "name": "chubv/php-stl",
+            "version": "v2.1.1",
+            "version_normalized": "2.1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ChubV/php-stl.git",
+                "reference": "9e7c4891cd13fd4f342db268eee197dc38615e3d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ChubV/php-stl/zipball/9e7c4891cd13fd4f342db268eee197dc38615e3d",
+                "reference": "9e7c4891cd13fd4f342db268eee197dc38615e3d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "nexusphp/tachycardia": "^1.0",
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9.0"
+            },
+            "time": "2022-11-22T09:27:56+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PHPSTL\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Chub",
+                    "email": "v@chub.com.ua",
+                    "homepage": "http://github.com/ChubV/"
+                }
+            ],
+            "description": "Library to parse STL file and get some statistics of the model",
+            "homepage": "http://github.com/ChubV/php-stl",
+            "keywords": [
+                "3d",
+                "stl",
+                "volume"
+            ],
+            "support": {
+                "issues": "https://github.com/ChubV/php-stl/issues",
+                "source": "https://github.com/ChubV/php-stl/tree/v2.1.1"
+            },
+            "install-path": "../chubv/php-stl"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}
