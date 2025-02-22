@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     # TODO: Make sure this is localhost
     ports:
-      - "8000:80"
+      - "127.0.0.1:8000:80"
     volumes:
       # Mount the print.php file to the container
       - ./php/print.php:/var/www/html/print.php
@@ -27,7 +27,7 @@ services:
       MYSQL_PASSWORD: cdc
     ports:
       # TODO: Make sure this is localhost
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
   
@@ -67,7 +67,7 @@ services:
     #   - ./keycloak/CyberPrint.json:/opt/keycloak/data/import/CyberPrint.json
     # TODO: This is a development environment, can we use production?
     # TODO: Remove the import realm after the realm is in the db
-    command: start-dev
+    command: start-dev --hostname=http://international-2025.local:8080
     depends_on:
       - mariadb
     
@@ -76,7 +76,7 @@ services:
       context: ./nextjs/business-website
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - "127.0.0.1:3000:3000"
     volumes:
       - ./uploads/:/var/www/html/uploads/
     depends_on:
@@ -90,7 +90,7 @@ services:
     environment:
       RAILS_MASTER_KEY: a990901f39ef07cf8c7cff8ff35d7dc1
     ports:
-      - "3002:80"
+      - "127.0.0.1:3002:80"
 
 volumes:
   mariadb_data:
