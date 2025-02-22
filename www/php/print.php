@@ -105,7 +105,7 @@ function handle_upload() {
 
             // Make the request to the Next.js app to create the order and get the order ID
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'http://192.168.1.101:3000/api/order-info');
+            curl_setopt($ch, CURLOPT_URL, 'http://10.48.16.179:3000/api/order-info');
             curl_setopt($ch, CURLOPT_POST, 1);
             
             $orderInfo = array(
@@ -123,7 +123,7 @@ function handle_upload() {
             
             $server_output = curl_exec($ch);
             curl_close($ch);
-
+            
             $response = json_decode($server_output, true);
             if ($response === null) {
                 $message = "Error creating order first.";

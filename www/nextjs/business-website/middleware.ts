@@ -21,12 +21,13 @@ function getKeys() {
 
 export default withAuth(
   async function middleware(req: NextRequest) {
+    console.log(req.nextUrl.pathname)
     // @ts-expect-error nextauth not recognized as an element of NextRequest
     const token = req.nextauth.token.accessToken; // Extract token after 'Bearer '
 
     try {
       const decodedToken = jwt.decode(token, { complete: true });
-      console.log(decodedToken?.payload)
+      // console.log(decodedToken?.payload)
       if (!decodedToken || typeof decodedToken === "string") {
         throw new Error("Invalid token format");
       }
@@ -44,8 +45,12 @@ export default withAuth(
         audience: "account",
       });
 
-      if (payload.email !== "admin@cyberprint.com") {
-        throw new Error("Invalid token format");
+      if (req.nextUrl.pathname.startsWith("/api/payment-info") ) {
+        console.log("Request to payment-info")
+      } else {
+        if (payload.email !== "admin@cyberprint.com") {
+          throw new Error("Invalid token format");
+        }
       }
 
       // Token is valid, proceed with the request
@@ -87,9 +92,9 @@ export default withAuth(
             audience: "account",
           });
     
-          if (payload.email !== "admin@cyberprint.com") {
-            throw new Error("Invalid token format");
-          }
+          // if (payload.email !== "admin@cyberprint.com") {
+          //   throw new Error("Invalid token format");
+          // }
     
           // Token is valid, proceed with the request
           return true;
@@ -107,5 +112,5 @@ export default withAuth(
 
 // Apply the middleware to specific paths
 export const config = {
-  matcher: ["/admin/:path*", "/api/server-flag/:path*"], // Apply to all API routes
+  matcher: ["/admin/:path*", "/api/server-flag/:path*", "/api/payment-info/:path*"], // Apply to all API routes
 };

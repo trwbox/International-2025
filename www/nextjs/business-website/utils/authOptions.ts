@@ -1,5 +1,4 @@
 import { AuthOptions, TokenSet } from "next-auth";
-import { jwtDecode } from "jwt-decode";
 import { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { cookies } from "@/app/lib/utils";
@@ -47,8 +46,6 @@ export const authOptions: AuthOptions = {
           token.accessToken = account.access_token;
           token.refreshToken = account.refresh_token;
           token.expiresAt = account.expires_at;
-          // TODO: This feels wrong, because why do they need their decoded access token, when they are already getting their access token in accessToken?
-          token.decoded = jwtDecode(account.access_token!);
   
           return token;
         }
@@ -84,7 +81,6 @@ export const authOptions: AuthOptions = {
       async session({ session, token }) {
         session.accessToken = token.accessToken as string;
         session.error = token.error as string;
-        session.user = token.decoded as Record<string, unknown>;
         return session;
       },
   
