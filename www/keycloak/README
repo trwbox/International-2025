@@ -1,0 +1,8 @@
+The Keycloak server is running via a docker container. You can see its status by running "docker ps -a". It's connected to the "keycloak" database 
+in order to persist changes. The docker command I ran to start up the container is pasted in "dockercmd" but you shouldn't need to run it since
+the container should start automatically, it takes a little longer than the app to start up though. The "CyberPrint.json" file was just a json file
+to do some configurations on the Keycloak server.
+
+If you go to www.teamX.isucdc.com:8080 it should take you to the admin sign in. Default creds are username: admin password: admin. It helps to take 
+snapshots of this box in case something goes awry. Do not make any huge overhauls, stick to the CyberPrint realm, the CyberPrint client, and you 
+must maintain a user "admin" of the email "admin@cyberprint.com" that can access the admin features of the app.
