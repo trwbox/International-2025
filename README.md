@@ -1,5 +1,7 @@
 # PseudoSudo Code
 
+This branch of the repository has the first commit being the initial code from the system, and the next commit being an overlay of the changes that were made all in 1 commit. To see what the real commit history for our updates on the [branch containerizing](https://github.com/trwbox/International-2025/tree/containerizing). That branch does not have the nice readme, and while it should be complete might be missing some contents like `.env` files, or have things in different places because things of initial containerization testing and setup, and the setup process were all being run from memory and not documentation.
+
 An initial note that this readme was written after the competition was complete, and as I am getting ready to publish the code. This is the code changes/additions that we made to the code base from the international CDC code base. The largest of the things that we implemented was that each of the services was running in it's own container. We placed everything in it's own folder to make it easier to deploy during the setup, allowing us to simply zip the folder, send it to the server, and then unzip it. All without the fear of leaking things like github information.
 
 Note that many of the comments in the code could be outdated and just not have been updated after we fixed the problem that it was talking about.
