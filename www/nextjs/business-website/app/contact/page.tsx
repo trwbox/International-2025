@@ -56,6 +56,8 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
 
+    // TODO: Why are we doing this here? This should be client side.
+    // TODO: This does not provide the required authentication.
     try {
       const response = await fetch("/api/contact", {
         method: "POST",

@@ -1,0 +1,7 @@
+services:
+  web:
+    build: .
+    environment:
+      RAILS_MASTER_KEY: a990901f39ef07cf8c7cff8ff35d7dc1
+    ports:
+      - "8002:3000"

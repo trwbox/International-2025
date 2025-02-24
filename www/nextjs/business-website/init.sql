@@ -27,6 +27,7 @@ CREATE TABLE orders (
     product_name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     filesize INT(11),
+    -- NOTE: We are doing files by UUID
     filename VARCHAR(255),
     paid TINYINT(1) DEFAULT 0,
     PRIMARY KEY (guid)

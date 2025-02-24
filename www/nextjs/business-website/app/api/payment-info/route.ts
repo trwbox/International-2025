@@ -1,58 +1,70 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import jwksClient from "jwks-rsa";
+// import jwksClient from "jwks-rsa";
 import { RowDataPacket } from "mysql2";
 import pool from "../../lib/pool";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
 
-let client: jwksClient.JwksClient;
+// let client: jwksClient.JwksClient;
 
 //Gets the public key from the auth server to verify the JWT signature
-async function getSigningKey(kid: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    client.getSigningKey(kid, (err, key) => {
-      if (err || !key) {
-        return reject(err);
-      }
-      const signingKey = key.getPublicKey();
-      resolve(signingKey);
-    });
-  });
-}
+// async function getSigningKey(kid: string): Promise<string> {
+//   return new Promise((resolve, reject) => {
+//     client.getSigningKey(kid, (err, key) => {
+//       if (err || !key) {
+//         return reject(err);
+//       }
+//       const signingKey = key.getPublicKey();
+//       resolve(signingKey);
+//     });
+//   });
+// }
 
-async function validateToken(token: string): Promise<string | null> {
-  try {
-    const decodedHeader = jwt.decode(token, { complete: true });
-    if (!decodedHeader || typeof decodedHeader === "string") {
-      throw new Error("Invalid token format");
-    }
+// async function validateToken(token: string): Promise<string | null> {
+//   try {
+//     const decodedHeader = jwt.decode(token, { complete: true });
+//     if (!decodedHeader || typeof decodedHeader === "string") {
+//       throw new Error("Invalid token format");
+//     }
 
-    const { kid } = decodedHeader.header;
-    const { iss } = decodedHeader.payload as JwtPayload;
-    client = jwksClient({ jwksUri: `${iss}/protocol/openid-connect/certs` });
-    const publicKey = await getSigningKey(kid!);
+//     const { kid } = decodedHeader.header;
+//     const { iss } = decodedHeader.payload as JwtPayload;
+//     client = jwksClient({ jwksUri: `${iss}/protocol/openid-connect/certs` });
+//     const publicKey = await getSigningKey(kid!);
 
-    const decoded = jwt.verify(token, publicKey) as JwtPayload;
+//     const decoded = jwt.verify(token, publicKey) as JwtPayload;
 
-    return decoded.email as string;
-  } catch (error) {
-    console.error("Token verification failed:", error);
-    return null;
-  }
-}
+//     return decoded.email as string;
+//   } catch (error) {
+//     console.error("Token verification failed:", error);
+//     return null;
+//   }
+// }
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 export async function GET(req: Request) {
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return new Response(
-        JSON.stringify({ error: "Authorization header missing or invalid" }),
-        { status: 401 },
-      );
-    }
+    // TODO: This feels broken. Likely should be using some better middleware thing?
+    // const authHeader = req.headers.get("Authorization");
+    // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    //   return new Response(
+    //     JSON.stringify({ error: "Authorization header missing or invalid" }),
+    //     { status: 401 },
+    //   );
+    // }
 
-    const token = authHeader.split(" ")[1];
-    const userId = await validateToken(token);
+    // const token = authHeader.split(" ")[1];
+    // const userId = await validateToken(token);
 
-    console.log("Token received: ", token);
-    console.log("userId found from token: ", userId);
+    // console.log("Token received: ", token);
+    // console.log("userId found from token: ", userId);
+    
+    const session = await getServerSession(authOptions)
+    const token = session?.accessToken
+    
+    const userId = token ? (jwt.decode(token) as JwtPayload)?.email : null;
+    
     if (!userId) {
       return new Response(
         JSON.stringify({ error: "Invalid or expired token" }),
@@ -60,6 +72,7 @@ export async function GET(req: Request) {
       );
     }
 
+    // TODO: I do not like how this is done.
     // Query to get the card info associated with the user
     const [rows] = await pool.query(
       `
@@ -76,6 +89,7 @@ export async function GET(req: Request) {
   `,
       [userId],
     );
+  
     const cardRows = rows as RowDataPacket[];
     return new Response(
       JSON.stringify({ cards: cardRows.length > 0 ? rows : [] }),
@@ -88,3 +102,4 @@ export async function GET(req: Request) {
     });
   }
 }
+

@@ -1,0 +1,6 @@
+# This config will allow the directory to exist, but no real contents to be tracked
+# Ignore everything in this directory
+*
+
+# Allow the gitignore to be tracked
+!.gitignore

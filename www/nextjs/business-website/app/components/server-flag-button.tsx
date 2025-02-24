@@ -4,6 +4,8 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 
+// TODO: This feels like the request should happen client side?
+// Why are we doing this weird double fetch?
 export function ServerFlagButton() {
   const [serverFlag, setServerFlag] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);

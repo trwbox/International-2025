@@ -7,12 +7,15 @@ import { useEffect, useState } from "react";
 import federatedLogout from "../lib/federatedLogout";
 export default function Header() {
   const { data: session } = useSession();
+  // TODO: Why is this in the header?
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     if (session?.accessToken) {
       try {
+        // TODO: This feels like the wrong way to do this and it needs to be verified.
         const decoded = jwt.decode(session.accessToken) as JwtPayload | null;
 
+        // TODO: I dislike the usage of the raw email. I think this could be a role?
         if (decoded!.email === "admin@cyberprint.com") {
           setIsAdmin(true);
         } else {

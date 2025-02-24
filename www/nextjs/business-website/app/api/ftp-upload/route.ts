@@ -1,16 +1,18 @@
-import { Client } from "basic-ftp";
+// import { Client } from "basic-ftp";
 import { FieldPacket, RowDataPacket } from "mysql2";
 import { NextResponse } from "next/server";
 import pool from "../../lib/pool";
+// @ts-expect-error - This package does not have types
+import { Client } from "ssh2-sftp-client";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { fileName, orderId } = body;
+    const { orderId } = body;
 
-    if (!fileName || !orderId) {
+    if ( !orderId ) {
       return NextResponse.json(
-        { message: "fileName and orderId is required in the request body" },
+        { message: "orderId is required in the request body" },
         { status: 400 },
       );
     }
@@ -34,6 +36,8 @@ export async function POST(req: Request) {
       );
     }
 
+    // Create the filename for the STL file
+    const fileName = `${orderId}.stl`;
     console.log("Filename for FTP upload: ", fileName);
 
     const localDirectory = process.env.FTP_LOCAL_DIR;
@@ -41,42 +45,63 @@ export async function POST(req: Request) {
 
     console.log("Local path of FTP file: ", `${localDirectory}/${fileName}`);
     console.log("Remote path of FTP file: ", `${remoteDirectory}/${fileName}`);
+
+    const config = {
+      host: process.env.FTP_HOST,
+      port: process.env.FTP_PORT,
+      user: process.env.FTP_USER,
+      password: process.env.FTP_PASSWORD,
+    }
+
+    const sftp = new Client('main-client');
+
+
+
+
+    // TODO: We should probably do a basename on the file just to be safe.
     const localFilePath = `${localDirectory}/${fileName}`;
 
-    const client = new Client();
-    client.ftp.verbose = true;
+    sftp.ftp.verbose = true;
 
-    try {
-      await client.access({
-        host: process.env.FTP_HOST,
-        user: process.env.FTP_USER,
-        password: process.env.FTP_PASSWORD,
-        secure: false,
-      });
+    await sftp.connect(config);
 
-      await client.cd(remoteDirectory as string);
+    await sftp.put(localFilePath, `${remoteDirectory}/${fileName}`);
 
-      await client.uploadFrom(localFilePath, fileName);
+    await sftp.end();
 
-      return NextResponse.json({ message: "File uploaded successfully" });
-    } catch (error) {
-      if (error instanceof Error) {
-        return NextResponse.json(
-          { message: "Failed to upload file.", error: error.message },
-          { status: 500 },
-        );
-      } else {
-        return NextResponse.json(
-          {
-            message: "Failed to upload file.",
-            error: "Unknown error occurred.",
-          },
-          { status: 500 },
-        );
-      }
-    } finally {
-      client.close();
-    }
+    return NextResponse.json({ message: "File uploaded successfully" });
+
+    // try {
+    //   await client.access({
+    //     host: process.env.FTP_HOST,
+    //     user: process.env.FTP_USER,
+    //     password: process.env.FTP_PASSWORD,
+    //     secure: false,
+    //   });
+
+    //   await client.cd(remoteDirectory as string);
+
+    //   await client.uploadFrom(localFilePath, fileName);
+
+    //   return NextResponse.json({ message: "File uploaded successfully" });
+    // } catch (error) {
+    //   if (error instanceof Error) {
+    //     return NextResponse.json(
+    //       { message: "Failed to upload file.", error: error.message },
+    //       { status: 500 },
+    //     );
+    //   } else {
+    //     return NextResponse.json(
+    //       {
+    //         message: "Failed to upload file.",
+    //         error: "Unknown error occurred.",
+    //       },
+    //       { status: 500 },
+    //     );
+    //   }
+    // } finally {
+    //   client.close();
+    // }
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(

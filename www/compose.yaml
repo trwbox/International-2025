@@ -1,0 +1,95 @@
+services:
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8000:80"
+    volumes:
+      # Mount the print.php file to the container
+      - ./php/print.php:/var/www/html/print.php
+      # Mount the vendor folder to the container
+      - ./php/vendor:/var/www/html/vendor
+      # Mount the uploads folder to the container
+      - "./uploads/:/var/www/uploads/"
+    environment:
+      UPLOAD_DIR: /var/www/uploads/
+  
+  # Basic MariaDB container
+  mariadb:
+    image: mariadb:latest
+    environment:
+      # NOTE: These passwords are changed after running the init.sql in the mariadb folder, and are not reset on container restart because of the volume
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: CyberPrint
+      MYSQL_USER: cdc
+      MYSQL_PASSWORD: cdc
+    ports:
+      # TODO: Make sure this is localhost
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+  
+  nginx:
+    # Use the modsecurity image to add WAF to the nginx container
+    image: owasp/modsecurity-crs:nginx
+    ports:
+      - "80:80"
+    environment:
+      ALLOWED_REQUEST_CONTENT_TYPE: "|application/x-www-form-urlencoded| |multipart/form-data| |multipart/related| |text/xml| |application/xml| |application/soap+xml| |application/json| |application/cloudevents+json| |application/cloudevents-batch+json| |text/plain|"
+    volumes:
+      - ./nginx/default:/etc/nginx/templates/conf.d/default.conf.template
+      # - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./uploads/:/var/www/html/uploads/
+    depends_on:
+      - php
+      - keycloak
+      - ruby
+      - nodejs
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    ports:
+      - "8080:8080"
+    environment:
+      KC_DB: mariadb
+      # TODO: Update this to the mariadb container name when in the main compose file
+      KC_DB_URL: jdbc:mariadb://mariadb:3306/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: c32rfUzrnBjTVP9S
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: 2zz8BnZEpf6Vh6Zu
+
+      KC_LOG_LEVEL: info
+      KC_METRICS_ENABLED: 'true'
+    # volumes:
+    #   - ./keycloak/CyberPrint.json:/opt/keycloak/data/import/CyberPrint.json
+    # TODO: This is a development environment, can we use production?
+    # TODO: Remove the import realm after the realm is in the db
+    command: start-dev --hostname=http://international-2025.local:8080
+    depends_on:
+      - mariadb
+    
+  nodejs:
+    build: 
+      context: ./nextjs/business-website
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./uploads/:/var/www/html/uploads/
+    depends_on:
+      - mariadb
+      - keycloak
+
+  ruby:
+    build: 
+      context: ./ruby-app
+      dockerfile: Dockerfile
+    environment:
+      RAILS_MASTER_KEY: a990901f39ef07cf8c7cff8ff35d7dc1
+    ports:
+      - "127.0.0.1:3002:80"
+
+volumes:
+  mariadb_data:
